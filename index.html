@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Job Scraper</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background-color: #87CEEB;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #FF6347;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #FF6347;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        button:hover {
+            background-color: #FF4500;
+        }
+        table {
+            margin-top: 20px;
+            width: 100%;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #FF6347;
+            color: white;
+        }
+        td {
+            background-color: #FFD700;
+        }
+        .job-title {
+            font-size: 1.2em;
+            color: #FF4500;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Job Scraper 🏆</h1>
+        <form id="scrape-form" action="/scrape" method="POST">
+            <label for="url">Website URL:</label>
+            <input type="text" id="url" name="url" required>
+            <label for="tag">HTML Tag:</label>
+            <input type="text" id="tag" name="tag" required>
+            <label for="class_name">Class Name:</label>
+            <input type="text" id="class_name" name="class_name">
+            <button type="submit">Scrape 💼</button>
+        </form>
+        <table id="jobs-table" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Title 📋</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#scrape-form').submit(function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '/scrape',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        $('#jobs-table tbody').empty();
+                        if (response.data && response.data.length > 0) {
+                            response.data.forEach(function(job) {
+                                $('#jobs-table tbody').append('<tr><td class="job-title">' + job + '</td></tr>');
+                            });
+                        } else {
+                            alert("No data found.");
+                        }
+                    },
+                    error: function(response) {
+                        alert('Error occurred: ' + response.message);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
